@@ -136,4 +136,33 @@ class TestAccountService(TestCase):
         """ Test case for account not found """
         response = self.client.get("/accounts/0")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    
+    def test_update_account(self):
+        """It should Update an existing Account"""
+        # create an Account to update
+        test_account = AccountFactory()
+        resp = self.client.post(BASE_URL, json=test_account.serialize())
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+        # update the account
+        new_account = resp.get_json()
+        new_account["name"] = "Something Known"
+        resp = self.client.put(f"{BASE_URL}/{new_account['id']}", json=new_account)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        updated_account = resp.get_json()
+        self.assertEqual(updated_account["name"], "Something Known")
         
+    def test_update_account_not_found(self):
+        """It should return 404 Not Found when updating a non-existing Account"""
+        # Create an Account to get a valid ID
+        test_account = AccountFactory()
+        resp = self.client.post(BASE_URL, json=test_account.serialize())
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+    
+        # Use an invalid ID for updating the account
+        invalid_id = 99999  # Assuming this ID does not exist
+        update_data = {"name": "New Name"}
+
+        resp = self.client.put(f"{BASE_URL}/{invalid_id}", json=update_data)
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+        error_message = resp.get_json()
+        self.assertIn("could not be found", error_message["message"])
