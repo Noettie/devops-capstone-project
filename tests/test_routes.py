@@ -106,7 +106,8 @@ class TestAccountService(TestCase):
         self.assertEqual(new_account["email"], account.email)
         self.assertEqual(new_account["address"], account.address)
         self.assertEqual(new_account["phone_number"], account.phone_number)
-        self.assertEqual(new_account["date_joined"], str(account.date_joined))
+        self.assertEqual(new_account["date_joined"], str
+(account.date_joined))
 
     def test_bad_request(self):
         """It should not Create an Account when sending the wrong data"""
@@ -123,4 +124,33 @@ class TestAccountService(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 
+    def test_404_error_handler(self):
+        response = self.client.get('/nonexistent')
+        self.assertEqual(response.status_code, 404)
+        data = response.get_json()
+        self.assertEqual(data['error'], 'Not Found')
+
     # ADD YOUR TEST CASES HERE ...
+    def test_get_account(self):
+        """It should Read a single Account"""
+        account = self._create_accounts(1)[0]
+        resp = self.client.get(
+            f"{BASE_URL}/{account.id}", content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(data["name"], account.name)
+
+    def test_get_account_not_found(self):
+        """It should not Read an Account that is not found"""
+        resp = self.client.get(f"{BASE_URL}/0")
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    
+    def test_create_account_invalid_data(self):
+        response = self.client.post('/accounts', json={"invalid": "data"})
+        self.assertEqual(response.status_code, 400)
+
+    def test_read_account_not_found(self):
+        response = self.client.get('/accounts/999')
+        self.assertEqual(response.status_code, 404)

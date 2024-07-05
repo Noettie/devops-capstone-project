@@ -28,6 +28,17 @@ def bad_request(error):
         status.HTTP_400_BAD_REQUEST,
     )
 
+@app.errorhandler(404)
+def not_found(error):
+    response = jsonify({"error": "Not Found"})
+    response.status_code = status.HTTP_404_NOT_FOUND
+    return response
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    response = jsonify({"error": "Internal Server Error"})
+    response.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    return response
 
 @app.errorhandler(status.HTTP_404_NOT_FOUND)
 def not_found(error):
@@ -69,17 +80,3 @@ def mediatype_not_supported(error):
         status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
     )
 
-
-@app.errorhandler(status.HTTP_500_INTERNAL_SERVER_ERROR)
-def internal_server_error(error):
-    """Handles unexpected server error with 500_SERVER_ERROR"""
-    message = str(error)
-    app.logger.error(message)
-    return (
-        jsonify(
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            error="Internal Server Error",
-            message=message,
-        ),
-        status.HTTP_500_INTERNAL_SERVER_ERROR,
-    )
