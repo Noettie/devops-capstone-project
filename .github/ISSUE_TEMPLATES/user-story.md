@@ -8,6 +8,6 @@
 
 ### Acceptance Criteria
 ```
-* Given the user is on the login page
-* When the user enters valid credentials and clicks the login button
-* Then the user is redirected to their personalized dashboard
+1. Given the user is on the login page
+2. When the user enters valid credentials and clicks the login button
+3. Then the user is redirected to their personalized dashboard
