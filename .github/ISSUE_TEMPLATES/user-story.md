@@ -7,7 +7,7 @@
 * The user must have a valid username and password
 
 ### Acceptance Criteria
-**Gherkin Syntax:**
+```
 * Given the user is on the login page
 * When the user enters valid credentials and clicks the login button
 * Then the user is redirected to their personalized dashboard
