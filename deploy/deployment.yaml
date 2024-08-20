@@ -18,7 +18,7 @@ spec:
         app: accounts
     spec:
       containers:
-      - image: IMAGE_NAME_HERE
+      - image: us.icr.io/sn-labs-noeleendlovu/accounts
         name: accounts
         resources: {}
 
@@ -39,4 +39,4 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: postgresql
-                key: database-user        
+                key: database-user   
