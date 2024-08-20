@@ -10,7 +10,6 @@ spec:
     - name: branch
       default: main
     - name: build-image
-    - value: "us.icr.io/$SN_ICR_NAMESPACE/my-app-image:latest"
   tasks:
     - name: init
       workspaces:
@@ -32,4 +31,3 @@ spec:
           value: $(params.branch)
       runAfter:
         - init
-
